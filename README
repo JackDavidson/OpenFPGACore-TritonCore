@@ -1,0 +1,21 @@
+OpenFPGACore
+
+This is a very simple and minimal FPGA that is implemented in CHISEL.
+To experiment with this project, you will need to install sbt.
+
+This FPGA core design is not intended to be production quality. Instead it is 
+meant as an experiment into open source FPGAs. This project will hopefully be 
+useful to those who wish to learn about how FPGAs work, and will also 
+hopefully serve as a seed to future open FPGA core work.
+
+An FPGA core is not the same as an FPGA board. FPGA cores are the heart of
+FPGA boards, and are one of the more complex parts of the board. The complexity
+does not come from the core its self, but in how it is programmed. This 
+particular implementation uses look up tables (LUTs), a general routing
+table (GRT) and logic squares that are composed of LUTs. Please look at the
+documentation for a in-depth explanation of each part.
+
+
+to build this project and run the unit tests, simply type:
+
+  $ sbt run
