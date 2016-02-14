@@ -1,13 +1,25 @@
 import Chisel._
+import scala.collection.mutable.ArrayBuffer
 
-class LUT extends Module {
+// inCount is the number of Mux selects. outCount is the number of results generated.
+class LUT(inCount: Int, outCount: Int) extends Module {
+  val lutWidth = (scala.math.pow(2, inCount)*outCount).toInt
   val io = new Bundle {
-    val lut = Bits(INPUT,  4)
-    val sel = Bits(INPUT,  2)
-    val res = Bits(OUTPUT, 1)
+    val lut = Bits(INPUT,  lutWidth)
+    val sel = Bits(INPUT,  inCount)
+    val res = Bits(OUTPUT, outCount)
   }
-  val highOrLow  = Mux(io.sel(1), io.lut(3,2), io.lut(1,0))
-  io.res        := Mux(io.sel(0), highOrLow(1), highOrLow(0))
+  val muxs = new ArrayBuffer[UInt]()
+  var lastWidth = lutWidth // used to select high vs. low in 
+  muxs += Mux(io.sel(inCount - 1), io.lut(lastWidth-1, lastWidth/2), io.lut(lastWidth/2 - 1, 0))
+  lastWidth = lastWidth / 2
+  for (i <- 1 to inCount) { /* soooo much easier than verilog */
+    muxs += Mux(io.sel(inCount - i - 1), muxs(i-1)(lastWidth-1, lastWidth/2), muxs(i-1)(lastWidth/2 - 1, 0))
+  }
+  
+  // result is simply the last Mux. note that this means that results to the functions
+  // are interleaved. lut = f1[0]f2[0]f1[1]f2[1]f1[2]f2[2]...
+  io.res        := muxs(muxs.length - 1)
 }
 
 class LUTTests(c: LUT) extends Tester(c) {
@@ -25,7 +37,7 @@ class LUTTests(c: LUT) extends Tester(c) {
 object LUTTestRunner {
   def main(args: Array[String]): Unit = {
     chiselMainTest(Array[String]("--backend", "c", "--compile", "--test", "--genHarness"),
-       () => Module(new LUT()))
+       () => Module(new LUT(2, 1)))
     {
       c => new LUTTests(c)
     }
