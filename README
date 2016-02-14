@@ -19,3 +19,22 @@ documentation for a in-depth explanation of each part.
 to build this project and run the unit tests, simply type:
 
   $ sbt run
+  
+to install sbt on Ubuntu, first download at http://www.scala-sbt.org/download.html
+then, extract to your Desktop. finally:
+
+  ** hit ctrl-alt-t **
+  $ cd ~/Desktop
+  $ sudo mv ./sbt /usr/share/
+  ** enter your password **
+  $ echo 'export PATH=$PATH:/usr/share/sbt'
+  ** restart your computer **
+  ** log in, and hit ctrl-alt-t **
+  $ sbt
+  ** allow sbt to install required items **
+  
+it is also recommended that you install the scala IDE and the sbt eclipse plugin.
+available at:
+
+  http://scala-ide.org/                        (scala IDE                      )
+  https://github.com/typesafehub/sbteclipse    (sbteclipse install instructions)
