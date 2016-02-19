@@ -2,7 +2,7 @@ import Chisel._
 import scala.collection.mutable.ArrayBuffer
 
 // inCount is the number of Mux selects. outCount is the number of results generated.
-class LUT(inCount: Int, outCount: Int) extends Module {
+class LUT(val inCount: Int,val outCount: Int) extends Module {
   val lutWidth = (scala.math.pow(2, inCount)*outCount).toInt
   val io = new Bundle {
     val lut = Bits(INPUT,  lutWidth)
@@ -12,8 +12,9 @@ class LUT(inCount: Int, outCount: Int) extends Module {
   val muxs = new ArrayBuffer[UInt]()
   var lastWidth = lutWidth // used to select high vs. low in 
   muxs += Mux(io.sel(inCount - 1), io.lut(lastWidth-1, lastWidth/2), io.lut(lastWidth/2 - 1, 0))
-  lastWidth = lastWidth / 2
-  for (i <- 1 to inCount) { /* soooo much easier than verilog */
+  
+  for (i <- 1 to (inCount-1)) { /* soooo much easier than verilog */
+    lastWidth = lastWidth / 2
     muxs += Mux(io.sel(inCount - i - 1), muxs(i-1)(lastWidth-1, lastWidth/2), muxs(i-1)(lastWidth/2 - 1, 0))
   }
   
