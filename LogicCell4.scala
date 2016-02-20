@@ -6,7 +6,7 @@ class LogicCell4() extends Module {
   val io = new Bundle {
     val lut   = Bits(INPUT,  16)// the 16 bits used as lookup values for the LUT
     val sel   = Bits(INPUT,  4) // the 4 bits used as selects in the LUT
-    val reVal = Bits(INPUT, 1)  // the value to set the flipflop to when its reset
+    val reVal = Bits(INPUT,  1) // the value to set the flipflop to when its reset
     val ffen  = Bool(INPUT)     // enable this cell's flipflop?
     val reset = Bool(INPUT)     // set to true and raise the clock to reset the FF
     val res   = Bits(OUTPUT, 1) // the one bit output from this Logic cell
@@ -28,6 +28,7 @@ class LogicCell4Tests(c: LogicCell4) extends Tester(c) {
   poke(c.io.reset, 0) /* disable reset (not actually necessary) */
   poke(c.io.ffen, 0)  /* disable flipflop (not actually necessary) */
 
+  /* LSB is at position 0. MSB is at 15 (F) */
   var valuesWithResults = Array(Array(0x0,1),Array(0x1,0),Array(0x2,1),Array(0x3,1), // D reversed
                                 Array(0x4,0),Array(0x5,0),Array(0x6,1),Array(0x7,1), // C reversed
                                 Array(0x8,1),Array(0x9,1),Array(0xA,1),Array(0xB,1), // F reversed
