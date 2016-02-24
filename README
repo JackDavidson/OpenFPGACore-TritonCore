@@ -18,7 +18,9 @@ documentation for a in-depth explanation of each part.
 
 to build this project and run the unit tests, simply type:
 
+  $ export SBT_OPTS="-Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xss2M  -Duser.timezone=GMT"
   $ sbt run
+  ** sbt_opts is because the tests are too large for the default memory allocation of sbt **
   
 to install sbt on Ubuntu, first download at http://www.scala-sbt.org/download.html
 then, extract to your Desktop. finally:
