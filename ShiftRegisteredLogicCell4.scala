@@ -31,7 +31,7 @@ class ShiftRegisteredLogicCell4(myClock: Clock) extends Module {
   }
   logicCell.io.reVal := shiftReg.io.out(16)      // set the FF reset value in the LC
   logicCell.io.ffen  := shiftReg.io.out(17)      // enable or disable the FF in the LC
-  logicCell.io.reset := io.reset                 // connect the  FF reset wire
+  logicCell.io.reset := io.reset | io.den        // connect the  FF reset wire or'd with data enable
   logicCell.io.sel := io.sel
   io.res           := logicCell.io.res
 }

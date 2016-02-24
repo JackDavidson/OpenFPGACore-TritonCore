@@ -24,9 +24,10 @@ class LUT(val inCount: Int,val outCount: Int) extends Module {
 }
 
 class LUTTests(c: LUT) extends Tester(c) {
-  poke(c.io.lut, 12)
+  poke(c.io.lut, 0x8C)
 
-  var valuesWithResults = Array(Array(0,0),Array(1,0),Array(2,1),Array(3,1))
+  var valuesWithResults = Array(Array(0,0),Array(1,0),Array(2,1),Array(3,1),
+                          Array(4,0),Array(5,0),Array(6,0),Array(7,1))
 
   for (valueWithResult <- valuesWithResults) {
     poke(c.io.sel, valueWithResult(0))
@@ -38,7 +39,7 @@ class LUTTests(c: LUT) extends Tester(c) {
 object LUTTestRunner {
   def main(args: Array[String]): Unit = {
     chiselMainTest(Array[String]("--backend", "c", "--compile", "--test", "--genHarness"),
-       () => Module(new LUT(2, 1)))
+       () => Module(new LUT(3, 1)))
     {
       c => new LUTTests(c)
     }
