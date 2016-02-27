@@ -7,8 +7,7 @@ import java.math.BigInteger
 class GeneralRoutingTable(myClock: Clock,inCount: Int,outCount: Int,numberOfGroups: Int) extends Module {
   // how to program:
   //   send bits in order of lowest to highest order for selecting -- LSBF
-  //   send groups of select bits in order of lowest to highest    -- LSBF
-  //          (outputs at the highest order (io,out(outCount-1)) are the bits which you program last) --Highest order last/LSBF
+  //     (outputs at the highest order (io,out(outCount-1)) are the bits which you program last) --Highest order last/LSBF
   
   val sizeOfOutputGrouping = outCount/numberOfGroups
   val numberOfInputsToSelFrom = inCount/numberOfGroups
@@ -17,7 +16,6 @@ class GeneralRoutingTable(myClock: Clock,inCount: Int,outCount: Int,numberOfGrou
     val in   = Bits(INPUT,  inCount)   // the list of inputs
     val den  = Bool(INPUT)             // Data enable, for shift reg
     val dta  = Bits(INPUT,  1)         // Data in (for programming the shift reg)
-    val dout = Bits(OUTPUT, 1)         // Data out (for carrying out)
     val out  = Bits(OUTPUT, outCount)  // all of the outputs
   }
   val shiftRegisters       = new ArrayBuffer[ShiftRegister]()
@@ -26,10 +24,10 @@ class GeneralRoutingTable(myClock: Clock,inCount: Int,outCount: Int,numberOfGrou
   shiftRegisters          += firstShiftReg
   firstShiftReg.io.enable := io.den
   firstShiftReg.io.dta    := io.dta
-  println("sizeOfOutputGrouping: " + sizeOfOutputGrouping + 
-          ", numberOfSelectBits: " + numberOfSelectBits +
-          ", numberOfGroups: " + numberOfGroups +
-          ", numberOfInputsToSelFrom " + numberOfInputsToSelFrom)
+  //println("sizeOfOutputGrouping: " + sizeOfOutputGrouping + 
+  //        ", numberOfSelectBits: " + numberOfSelectBits +
+  //        ", numberOfGroups: " + numberOfGroups +
+  //        ", numberOfInputsToSelFrom " + numberOfInputsToSelFrom)
   io.out    := UInt(0) // set a default value for io.out (weird CHISEL req)
   
   for (i <- 1 to numberOfGroups) {
