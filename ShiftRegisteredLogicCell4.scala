@@ -5,12 +5,14 @@ class ShiftRegisteredLogicCell4(myClock: Clock) extends Module {
   // how to program this: first send ffen, then reVal, then LUT data LSB first
   // ffen is flipflop enable, and selects whether or not to register the results of the LUT.
   // reVal is the value to reset the LC's FF to.
+  // sel(3) is the high-order bit. sel(0) is the low-order
   val io = new Bundle {
     val den   = Bool(INPUT)     // data enable for shift register
     val dta   = Bits(INPUT,  1) // the data being sent to shift register. only shifts when(den)
     val sel   = Bits(INPUT,  4) // the 4 bits used as selects in the LUT
     val reset = Bool(INPUT)     // resets the FF in the LC to the reset bit
     val res   = Bits(OUTPUT, 1) // the one-bit result
+    val cot   = Bits(OUTPUT, 1) // the carry-out of the shift register
   }
   val shiftReg        = Module(new ShiftRegister(myClock, 18))
   shiftReg.io.enable := io.den // den just gets passed to the shift register
@@ -34,6 +36,7 @@ class ShiftRegisteredLogicCell4(myClock: Clock) extends Module {
   logicCell.io.reset := io.reset | io.den        // connect the  FF reset wire or'd with data enable
   logicCell.io.sel := io.sel
   io.res           := logicCell.io.res
+  io.cot           := shiftReg.io.out(15)
 }
 
 class ShiftRegisteredLogicCell4Tests(c: ShiftRegisteredLogicCell4) extends Tester(c) {
