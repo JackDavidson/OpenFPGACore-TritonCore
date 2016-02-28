@@ -7,7 +7,7 @@ import java.math.BigInteger
 class GeneralRoutingTable(myClock: Clock,inCount: Int,outCount: Int,numberOfGroups: Int) extends Module {
   // how to program:
   //   send bits in order of lowest to highest order for selecting -- LSBF
-  //     (outputs at the highest order (io,out(outCount-1)) are the bits which you program last) --Highest order last/LSBF
+  //     (outputs at the highest order (io.out(outCount-1)) are the bits which you program last) --Highest order last/LSBF
   
   val sizeOfOutputGrouping = outCount/numberOfGroups
   val numberOfInputsToSelFrom = inCount/numberOfGroups
@@ -97,7 +97,7 @@ class GeneralRoutingTableTests(c: GeneralRoutingTable) extends Tester(c) {
   
   
   // 20/6=3, 20%6 = 2, so first 3 output bits point to first input. 4th output bit points to input 
-  //    32 + 16 = 48 (counting from 0 = 49), from the right. that gives us the second 8 below
+  //    32 + 16 = 48 (counting from 0 = 49), from the right. that gives us the 1 below
   poke(c.io.in, new BigInteger("8001000000000000000000000000000000000000000000000000000000000000", 16))
   result = "F"
   for (i <- 0 to 1) // repeat 100 0's 2 times
