@@ -8,6 +8,8 @@ class GeneralRoutingTable(myClock: Clock,inCount: Int,outCount: Int,numberOfGrou
   // how to program:
   //   send bits in order of lowest to highest order for selecting -- LSBF
   //     (outputs at the highest order (io.out(outCount-1)) are the bits which you program last) --Highest order last/LSBF
+  //   notice that high-order routs to high-otder, and low-order routs to low-order
+  //   in other words, at 256 inputs, 960 outputs and 4 groupings, input number 0 only routs to outputs 0-64
   
   val sizeOfOutputGrouping = outCount/numberOfGroups
   val numberOfInputsToSelFrom = inCount/numberOfGroups
@@ -103,6 +105,26 @@ class GeneralRoutingTableTests(c: GeneralRoutingTable) extends Tester(c) {
   for (i <- 0 to 1) // repeat 100 0's 2 times
     result += oneHundredZeros
   result += "000000000000000000000000000000000000000" // and 39 0's to finish it up
+  expect(c.io.out, new BigInteger(result, 16)) // did it direct correctly?
+  
+  
+  
+  
+  
+  var inputAddress = 48;
+  for (i <- 0 to 15) {  // route input pins to sel(3) on the output pins
+    for (j <- 0 to 5) {
+      poke(c.io.dta, ((inputAddress >> j) & 1))
+      step(1)
+    }
+    inputAddress += 1
+  }
+  
+  poke(c.io.in, new BigInteger("CCDD000000000000000000000000000000000000000000000000000000000000", 16))
+  result = "CCDDF"
+  for (i <- 0 to 1) // repeat 100 0's 2 times
+    result += oneHundredZeros
+  result += "00000000000000000000000000000000000" // and 35 0's to finish it up
   expect(c.io.out, new BigInteger(result, 16)) // did it direct correctly?
 }
 
