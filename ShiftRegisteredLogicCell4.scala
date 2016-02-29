@@ -31,12 +31,12 @@ class ShiftRegisteredLogicCell4(myClock: Clock) extends Module {
     // logicCell.io.lut(15 - i) := shiftReg.io.out(i);
     // TODO: there seems to be a CHISEL bug there!
   }
-  logicCell.io.reVal := shiftReg.io.out(16)      // set the FF reset value in the LC
-  logicCell.io.ffen  := shiftReg.io.out(17)      // enable or disable the FF in the LC
-  logicCell.io.reset := io.reset | io.den        // connect the  FF reset wire or'd with data enable
+  logicCell.io.reVal := shiftReg.io.out(16)          // set the FF reset value in the LC
+  logicCell.io.ffen  := shiftReg.io.out(17) | io.den // enable or disable the FF in the LC (enabled during programming)
+  logicCell.io.reset := io.reset | io.den            // connect the  FF when reset or data enabled
   logicCell.io.sel := io.sel
   io.res           := logicCell.io.res
-  io.cot           := shiftReg.io.out(15)
+  io.cot           := shiftReg.io.out(17)
 }
 
 class ShiftRegisteredLogicCell4Tests(c: ShiftRegisteredLogicCell4) extends Tester(c) {
