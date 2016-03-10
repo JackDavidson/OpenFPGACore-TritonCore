@@ -35,7 +35,7 @@ then, extract to your Desktop. finally:
   $ cd ~/Desktop
   $ sudo mv ./sbt /usr/share/
   ** enter your password **
-  $ echo 'export PATH=$PATH:/usr/share/sbt'
+  $ echo 'export PATH=$PATH:/usr/share/sbt' >> ~/.profile
   ** restart your computer **
   ** log in, and hit ctrl-alt-t **
   $ sbt
