@@ -1,0 +1,89 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+                display: none;
+            }
+        </style>
+        <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="../css/main.css">
+
+        <script src="../js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">Tritoncore-I</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>The General Routing Table</h1>
+        <br/>
+        <p>The GRT is the largest part of Tritoncore-I. Some quick calculations put it at roughly twice the size
+of all the LUTs combined. The GRT is the reason Tritoncore-I would never be feasable for production, but
+nonetheless its design was integral to simplifying the programming enough to get the entire software stack complete
+within the six weeks we had.</p>
+        <br/>
+        <p>The GRT is programmed 6 bits at a time. The first 6 bits sent represent routing one of inputs 0-63
+to input 0 on LUT 0. The next six route input 0 on LUT 1. Eventually, after sending 64 groups of 6 bits, you
+will start over programming routing to input 1 of each LUT, and so on.</p>
+        <br/>
+        <p>The last thing to remember is that when the FPGA is programmed, the routing table needs to be sent
+its bits before the LUTs recieve theirs. This was an arbitrary decision that the LUTs would come first in the
+100,80 bit programming shift register.</p>
+        <br/>
+        <p>The image below shows another way to think about the GRT structure. There are 940 outputs and 256 inputs.
+The inputs divide into 4 groups, and the outputs do the same. Inputs in group 0 only route to outputs
+in group 0. same with 1, 2, and 3.</p>
+        <br/>
+        <img src='./img/GRT.png'/>
+        <br/>
+        <br/>
+        <p><a class="btn btn-primary btn-lg" id='more-btn' role="button">Continue &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+
+      <hr>
+
+      <footer>
+        <p>&copy; Jack Davidson 2015</p>
+      </footer>
+    </div> <!-- /container -->        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+        <script src="../js/vendor/bootstrap.min.js"></script>
+
+        <script src="../js/main.js"></script>
+    </body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+                display: none;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">Tritoncore-I</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Welcome to the Tritoncore-I docs!</h1>
+        <br/>
+        <p>Tritoncore-I has three main components. The high-level FPGA core that brings the lower level components together, the general
+routing table (GRT) which routes lookup tables together, and the lookup tables(LUTs) themselves, which are each individually capable of recreating
+any 4 input, 1-output combinational logic block.</p>
+        <br/>
+        <p><a class="btn btn-primary btn-lg" id='more-btn' role="button">Learn more &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>FPGA Core</h2>
+          <p>This is the high-level module, described in FPGACore.scala</p>
+          <p>If you want to skip the descriptions and start coding, look at the
+links to the right.</p>
+          <p><a class="btn btn-default" href="pgs/fpga.html" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Setup Tutorial</h2>
+          <p>This is a tutorial on setting up the tools this project, including all of its components.</p>
+          <p>It will walk you though compiling the core and the other project components, then taking some verilog code down to bitstream and testing 
+on the Tritoncore-I emulator.</p>
+          <p><a class="btn btn-default" href="pgs/tutorial.html" role="button">View details &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Generating a Bitstream</h2>
+          <p>This is the second part of the tutorial, after setting up the FPGA emulator and the toolchain.</p> 
+          <p>It will walk you through taking verilog code, using yosys to convert it to a netlist, and using the bitstream generator to convert it to 
+a bitstream that the FPGA uses as input</p>
+          <p><a class="btn btn-default" href="pgs/compileverilog.html" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Jack Davidson 2015</p>
+      </footer>
+    </div> <!-- /container -->        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
+
+        <script src="js/main.js"></script>
+    </body>
+</html>
