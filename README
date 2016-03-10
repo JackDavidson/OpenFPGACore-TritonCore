@@ -19,7 +19,7 @@ in-depth explanation of each part.
 This project has three components, all of which are essential:
   1. The FPGA core (this repository)
   2. The netlist generator (https://github.com/hungrymonkey/yosys-1)
-  3. The bitstream generator (TODO)
+  3. The bitstream generator (https://github.com/Ailss/pnr)
 
 
 to build this project and run the unit tests, simply type:
