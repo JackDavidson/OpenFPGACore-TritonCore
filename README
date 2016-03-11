@@ -28,21 +28,21 @@ to build this project and run the unit tests, simply type:
   $ sbt run
   ** sbt_opts is because the core is too large for the default memory allocation of sbt **
   
-to install sbt on Ubuntu, first download at http://www.scala-sbt.org/download.html
-then, extract to your Desktop. finally:
-
-  ** hit ctrl-alt-t **
-  $ cd ~/Desktop
-  $ sudo mv ./sbt /usr/share/
-  ** enter your password **
-  $ echo 'export PATH=$PATH:/usr/share/sbt' >> ~/.profile
-  ** restart your computer **
-  ** log in, and hit ctrl-alt-t **
+to install sbt on Ubuntu, go to http://www.scala-sbt.org/download.html
+follow the instructions under (deb). you can use ctrl+alt+t to open terminal,
+and ctrl+shift+v to paste lines into terminal
+  ** before you try running the FPGA tests **
   $ sbt
   ** allow sbt to install required items **
+  ** hit ctrl+d to exit sbt **
   
 it is also recommended that you install the scala IDE and the sbt eclipse plugin.
 available at:
 
   http://scala-ide.org/                        (scala IDE                      )
   https://github.com/typesafehub/sbteclipse    (sbteclipse install instructions)
+  
+  
+  
+Full documentation on Tritoncore-I is available in TritoncoreI/docs/index.html
+The code is also well commented and fairly clear.
