@@ -146,17 +146,20 @@ class FPGACoreTests(c: FPGACore) extends Tester(c) {
   expect(c.io.pot, 0xFFFF)
   
   // ======== END TEST 1 =========
+  
+  
+  //printf("About to start test 2. Press enter to contnue.");
+  //var a = scala.io.StdIn.readLine()
+  
   // ======== START TEST 2 =========
   
-  /*
-  // first test: connect input directly to output.
+  // test: connect input directly to output.
   poke(c.io.den, 1)  // set data enable
   poke(c.io.dta, 0)
   
   var inputAddress = 50;
-  for (i <- 1 to (720*6)) { // first lets route everything so that it tries to select an input value
+  for (i <- 1 to (720)) { // first lets route all the inputs we dont need to the output of LUTs 0, 63, etc...
     for (j <- 0 to 5) {
-    poke(c.io.dta, ((inputAddress >> j) & 1))
       step(1)
     }
   }
@@ -171,47 +174,74 @@ class FPGACoreTests(c: FPGACore) extends Tester(c) {
   }
   
   // 6*16 bits + 4320 = 4416 bits
-  inputAddress = 48;
-  for (i <- 16 to 239) { // set address 49 on the input 3 of LUTs 16-239
+  poke(c.io.dta, 0)
+  for (i <- 16 to 239) { // route everything else we dont need with 0's
     for (j <- 0 to 5) {
-      poke(c.io.dta, ((inputAddress >> j) & 1))
       step(1)
     }
   }
-  // 224*6 = 1344 + 4416 = 5750 bits
+  // 224*6 = 1344 + 4416 = 5760 bits
   
   // 240*4*6 = 5760 bits so far (routing bits are done, now for LUT programming)
   for (i <- 0 to 15) {  // program the output LUTs
     poke(c.io.dta, 0)   // FFen (false)
     step(1)
-    poke(c.io.dta, 1)   // FFreset (dont care)
+    poke(c.io.dta, 0)   // FFreset (dont care)
     step(1)
-    for (j <- 0 to 7) { // low-order is 0's
+    poke(c.io.dta, 0)   // low-order is 0's
+    for (j <- 0 to 7) {
       step(1)
     }
-    poke(c.io.dta, 1) // high-order bits are 1's
-    for (j <- 0 to 7) { // low-order is 0's
+    poke(c.io.dta, 1)   // high-order bits are 1's
+    for (j <- 0 to 7) {
       step(1)
     }
   }
   
-  // we're on bit number 5760 + 16*18 = 6084
+  // we're on bit number 5760 + 16*18 = 6048
   poke(c.io.dta, 0) // program the rest of the cells with 0's
   for (i <- 1 to (240-16)) {
-    poke(c.io.dta, 1)   // FFen (true)
+    poke(c.io.dta, 0)   // FFen (true), just cuz
     step(1)
-    poke(c.io.dta, 0)   // FFreset (1)
+    poke(c.io.dta, 0)   // FFreset (0)
+    poke(c.io.dta, 0)   // FFreset (0)
     step(1)
-    for (j <- 0 to 7) { // low-order is 1's
-      step(1)
-    }
-    poke(c.io.dta, 1) // high-order bits are 1's
-    for (j <- 0 to 7) { // high-order is 0's
+    for (j <- 0 to 15) { // low-order is 1's
       step(1)
     }
   }
-  // 224*18 = 4032 + 6084 = 1080
-  */
+  // 224*18 = 4032 + 6048 = 10,080
+  
+  poke(c.io.den, 0) // done programming. lets see what happened.
+  poke(c.io.reset, 1)
+  step(1)
+  poke(c.io.reset, 0)
+  
+  poke(c.io.pin, 0xFFFF)
+  update   // note that this is NOT a cycle.
+  update   // two updates because we have some issues with CHISEL. likely due to the combinational logic loops.
+  expect(c.io.pot, 0xFFFF)
+  
+  poke(c.io.pin, 0xFF00)
+  update
+  update
+  expect(c.io.pot, 0xFF00)
+  
+  poke(c.io.pin, 0xF0FF)
+  update
+  update
+  expect(c.io.pot, 0xF0FF)
+  
+  poke(c.io.pin, 0xAABB)
+  update
+  update
+  expect(c.io.pot, 0xAABB)
+  
+  poke(c.io.pin, 0xABCD)
+  update
+  update
+  expect(c.io.pot, 0xABCD)
+  
   // ======== END TEST 2 =========
 }
 
