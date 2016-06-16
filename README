@@ -36,11 +36,10 @@ and ctrl+shift+v to paste lines into terminal
   ** allow sbt to install required items **
   ** hit ctrl+d to exit sbt **
   
-it is also recommended that you install the scala IDE and the sbt eclipse plugin.
+it is also recommended that you install the IntelliJ idea ide, and its Scala plugin.
 available at:
 
-  http://scala-ide.org/                        (scala IDE                      )
-  https://github.com/typesafehub/sbteclipse    (sbteclipse install instructions)
+  https://www.jetbrains.com/idea/                  (intelli-J, Scala plugin option on install)
   
   
   
