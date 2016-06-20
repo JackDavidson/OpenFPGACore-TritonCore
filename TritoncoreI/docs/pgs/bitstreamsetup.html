@@ -47,7 +47,23 @@
       <div class="container">
         <h1>Bitstream Generator Setup</h1>
         <br/>
-        <p>On ubuntu, hit ctl+alt+t to open terminal. Type:</p>
+        <p>On ubuntu, hit ctrl+alt+t to open terminal. Type:</p>
+        <br/>
+        <p>$ cd ~/Desktop</p>
+        <p>$ git clone https://github.com/Ailss/pnr.git</p>
+        <p>$ cd ./pnr/src</p>
+        <br/>
+        <p>Make the place and route tool:</p>
+        <p>$ make</p>
+        <br/>
+        <p>Generate the bitstream:</p>
+        <br/>
+        <p>first, coppy and.bliff from wherever you built it (Desktop/yosys-1/and.bliff, probably)</p>
+        <p>put a copy of and.bliff in the pnr/src directory</p>
+        <p>$ ./pnr.elf and.blif 2>and.bits</p>
+        <p>$ gedit and.bits</p>
+        <p>at the top of the file, you will see debugging information. The important part is the bitstream, so delete the debugging info. make sure there is no newline at the end or top of the file after modifying it. The info will tell you which outputs and input pins will actually be used, though. So, it may be important to look over</p>
+        <p>In our case, the outpus will show up in the LSB's of the output pins. (output pins 0 and 1, since logic cells 0 and 1 are used.) The inputs will come from the LSB's on the input (index 0,1,2,3)</p>
         <br/>
         <p><a class="btn btn-primary btn-lg" id='more-btn' role="button">Continue &raquo;</a></p>
       </div>

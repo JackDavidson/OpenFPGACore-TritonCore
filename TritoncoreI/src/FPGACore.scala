@@ -10,7 +10,9 @@ class FPGACore(inputPins : Int, outputPins : Int, dClk : Clock) extends Module {
                                      /* each of the 4 inputs to a different 1/4th of the      */
                                      /* outputs of all LUTs.                                  */
   // how to program:
-  // 1. send ROUTING of input (0) to LUTs 0-15 (the luts whose output is connected to out)
+  // 1. send ROUTING of input (0) to LUTs 0-15 (the luts whose output is connected to out) JUST inputs 0!
+  //        just to reiterate, it sounds weird. but send routing to all LSB inputs before ANY other inputs
+  //          that means you go through all LUTS and route their input 0 BEFORE anything else.
   // 2. send ROUTING of input (0) to the input of LUTs 16-239 (addresses 240-354 are the pin inputs)
   //
   //   repeat 1. and 2. for inputs (1),(2),(3).      (0) is LSB, (3) is MSB for select values
@@ -247,6 +249,7 @@ class FPGACoreTests(c: FPGACore) extends Tester(c) {
 
 object coreTestRunner {
   def main(args: Array[String]): Unit = {
+    // chiselMainTest(Array[String]("--backend", "v", "--compile", "--noCombLoop"), <--- for exporting the verilog
     chiselMainTest(Array[String]("--backend", "c", "--compile", "--test", "--genHarness", "--noCombLoop"),
        () => Module(new FPGACore(16, 16, Driver.implicitClock))){c => new FPGACoreTests(c)}
   }

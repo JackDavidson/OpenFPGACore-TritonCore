@@ -45,9 +45,25 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-        <h1>Compiling Verilog for Tritoncore-I</h1>
+        <h1>Running a Verilog Testbench for Tritoncore-I</h1>
         <br/>
-        <p>On ubuntu, hit ctl+alt+t to open terminal. Type:</p>
+        <p>Included with your download from github is the exported TritoncoreI verilog, plus a testbench example which loads a bitstream into the FPGA core, and runs a few inputs through it.</p>
+        <p>All necessary files are included in the verilog folder, located under the top of the TritoncoreI directory.</p>
+        <p>For convenience, and.bits is included with the files. However, you should try renaming the and.bits file and replacing it with your own to make sure that you successfully ran through the rest of the toolchain.</p>
+        <p>Install Vivado:</p>
+        <br/>
+        <p>If you are on Ubuntu, the fastest way to get running is to go follow <a href=http://www.xilinx.com/Attachment/Install_Vivado_2014.3_on_Ubuntu_14.04.pdf>this</a> tutorial. Tested on Ubuntu 16.04 with Oracle-Java-8 SDK and JRE.</p>
+        <p>you can also use Modelsim to run the testbench, as well. However, modelsim free edition ran at about 1/4th the speed for me, taking 4 hours to complete the test bench.</p>
+        <p>Run the testbench in vivado:</p>
+        <br/>
+        <p>$ /opt/Xilinix/Vivado/....../bin/vivado</p>
+        <p>Create a new project, and select TritoncoreI/verilog as the location. Import all verilog files, and add and.bits as a simulation source.</p>
+        <p>Make sure you include and.bits as a simulation source!!!</p>
+        <p>Set test_core as the top-level module if necessary. At the bottom of your screen, you will see a tcl console. type <p>
+        <p>> run all</p>
+        <p>into the console to start the simulation.</p>
+        <p>You're done! You now have the entire toolchain running. Give yourself a pat on the back.</p>
+        <p>On the next pages, there is a tutorial on how the final Verilog for the FPGA core was actually generated. If you plan to help develp the on the Tritoncore project, you will need this information. (STILL TODO!!)</p>
         <br/>
         <p><a class="btn btn-primary btn-lg" id='more-btn' role="button">Continue &raquo;</a></p>
       </div>
