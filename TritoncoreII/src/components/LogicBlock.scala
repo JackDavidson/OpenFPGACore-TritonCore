@@ -1,6 +1,12 @@
 import Chisel._
 
-
+/**
+  * the LogicBlock is a wrapper around a lookup table.
+  *   routed inputs:   4   (selectInputs)
+  *   routed outputs:  1   (result)
+  *   programming:    18   (programmedInputs, enableFlipflop, flipflopReset)
+  *   other inputs:    1   (reset)
+  */
 class LogicBlock extends Module {
   val io = new Bundle {
     val programmedInputs = Bits(INPUT,  16) // This data is provided by the GlobalProgrammer

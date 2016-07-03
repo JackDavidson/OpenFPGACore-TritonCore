@@ -1,7 +1,14 @@
 import Chisel._
 
 
-class AdderBlock extends Module {
+/**
+  * the WrapperAdder is simply a wrapper around an addition unit.
+  *   routed inputs:  17   (carryIn, inputA, inputB)
+  *   routed outputs:  9   (result, carryOut)
+  *   programming:     0
+  *   other inputs:    0
+  */
+class WrapperAdder extends Module {
   val io = new Bundle {
     val carryIn     = Bits(INPUT,  1)
     val inputA      = Bits(INPUT,  8) // the first input number
@@ -16,7 +23,7 @@ class AdderBlock extends Module {
   io.carryOut := additionResult(8);
 }
 
-class AdderBlockTests(c: AdderBlock) extends Tester(c) {
+class WrapperAdderTests(c: WrapperAdder) extends Tester(c) {
   poke(c.io.inputA, 0xAA)
 
   var valuesWithResults = Array(Array(0,0,0xAA,0), Array(1,0,0xAB,0), Array(0,2,0xAC,0), Array(1,3,0xAE,0),
@@ -30,12 +37,12 @@ class AdderBlockTests(c: AdderBlock) extends Tester(c) {
   }
 }
 
-object AdderBlockTestRunner {
+object WrapperAdderTestRunner {
   def main(args: Array[String]): Unit = {
     chiselMainTest(Array[String]("--backend", "c", "--compile", "--test", "--genHarness"),
-      () => Module(new AdderBlock()))
+      () => Module(new WrapperAdder()))
     {
-      c => new AdderBlockTests(c)
+      c => new WrapperAdderTests(c)
     }
   }
 }
