@@ -1,7 +1,13 @@
 import Chisel._
 
-
-class MultiplyBlock extends Module {
+/**
+  * the MultiplyBlock is a wrapper around a multipliation unit
+  *   routed inputs:  16   (inputA, inputB)
+  *   routed outputs: 16   (result)
+  *   programming:     0
+  *   other inputs:    0
+  */
+class WrapperMultiplier extends Module {
   val io = new Bundle {
     val inputA      = Bits(INPUT,  8 ) // the first input number, unsigned
     val inputB      = Bits(INPUT,  8 ) // the second input number, unsigned
@@ -10,7 +16,7 @@ class MultiplyBlock extends Module {
   io.result := io.inputA * io.inputB
 }
 
-class MultiplyBlockTests(c:MultiplyBlock) extends Tester(c) {
+class WrapperMultiplierTests(c:WrapperMultiplier) extends Tester(c) {
   poke(c.io.inputA, 0xAA)
 
   var valuesWithResults = Array(Array(0xAA, 0x70E4), Array(0x6F, 0x49B6))
@@ -21,12 +27,12 @@ class MultiplyBlockTests(c:MultiplyBlock) extends Tester(c) {
   }
 }
 
-object MultiplyBlockTestRunner {
+object WrapperMultiplierTestRunner {
   def main(args: Array[String]): Unit = {
     chiselMainTest(Array[String]("--backend", "c", "--compile", "--test", "--genHarness"),
-      () => Module(new MultiplyBlock()))
+      () => Module(new WrapperMultiplier()))
     {
-      c => new MultiplyBlockTests(c)
+      c => new WrapperMultiplierTests(c)
     }
   }
 }
