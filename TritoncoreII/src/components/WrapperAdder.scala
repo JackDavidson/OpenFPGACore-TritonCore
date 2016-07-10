@@ -14,6 +14,7 @@ class WrapperAdder extends Module {
     val inputA      = Bits(INPUT,  8) // the first input number
     val inputB      = Bits(INPUT,  8) // the second input number
     val enableReg   = Bits(INPUT,  1)
+    val enableAdder = Bits(INPUT,  1)
     val reset       = Bits(INPUT,  1)
     val result      = Bits(OUTPUT, 8) // the addition result
     val carryOut    = Bits(OUTPUT, 1)
@@ -27,12 +28,14 @@ class WrapperAdder extends Module {
   optionalRegResult := Mux(io.reset(0), UInt(0, width = 8), additionResult(7,0))  // resets to 0
   optionalRegCout := Mux(io.reset(0), UInt(0, width = 1), additionResult(8))       // resets to 0
 
-  io.result := Mux(io.enableReg(0), optionalRegResult, additionResult(7,0)) // reg is enabled/disabled by enableRe
-  io.carryOut := Mux(io.enableReg(0), optionalRegCout, additionResult(8))
+  // reg is enabled/disabled by enableReg.
+  io.result := Mux(io.enableAdder(0), Mux(io.enableReg(0), optionalRegResult, additionResult(7,0)), io.inputB)
+  io.carryOut := Mux(io.enableAdder(0), Mux(io.enableReg(0), optionalRegCout, additionResult(8)), io.carryIn)
 }
 
 class WrapperAdderTests(c: WrapperAdder) extends Tester(c) {
   poke(c.io.inputA, 0xAA)
+  poke(c.io.enableAdder, 1)
 
   var valuesWithResults = Array(Array(0,0,0xAA,0), Array(1,0,0xAB,0), Array(0,2,0xAC,0), Array(1,3,0xAE,0),
     Array(0,0x90,0x3A,1))

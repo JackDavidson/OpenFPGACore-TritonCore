@@ -16,8 +16,8 @@ import scala.collection.mutable.ArrayBuffer
   * log_2(32) = 5, so we need 5 bits to route every output of the routing table. We have 55 LC's, which means 220
   * inputs to route to. 220 * 5 = 1100 routing bits.
   *
-  * we have 55 LogicBlocks, each of which requires 18 bits to program. That leaves us with 55*18 = 990 programming
-  * bits.
+  * we have 55 LogicBlocks, each of which requires 18 bits to program. That leaves us with 55*18 + 2= 990 programming
+  * bits. The plus two is for the enableAdder and enableReg on the adder bits.
   *
   * There are 64 inputs to this module. They all go to the routing table on inputs: (re-stated below under routing)
   *   input( 15,  0)   routingInput( 15,  0)
@@ -61,9 +61,10 @@ import scala.collection.mutable.ArrayBuffer
   * WrapperAdder:
   *   There are 17 inputs to the adder. They are chosen with a goal of using LogicBlocks that are not output, but also
   *      are the LogicBlocks which are highest numbered:
-  *   logicBlocks( 31, 24)   adder.io.inputB
-  *   logicBlocks( 23, 16)   adder.io.inputA
-  *   logicBlocks( 15    )   adder.io.carryIn
+  *
+  *   logicBlocks( 31    )   adder.io.carryIn
+  *   logicBlocks( 30, 23)   adder.io.inputB
+  *   logicBlocks( 22, 15)   adder.io.inputA
   *
   *
   * There are 32 outputs from this module. they are numbered as follows:
@@ -77,7 +78,9 @@ import scala.collection.mutable.ArrayBuffer
   *   bits go to the lowest numbered logic cells. Within each group of 18 bits, the first 16 bits are routing, the
   *   next bit enables the flopflop, and the highest bit says what value the flipflop will reset to.
   *   The LSB for the programming is also the LSB on the 'programming' input. In other words, the directionality of the
-  *   bits match the directionality of the 'programming' input.
+  *   bits match the directionality of the 'programming' input. The highest-order programming bit enables a register on
+  *   the end of the adder, and the second to highest enables the adder itself (otherwise, it acts as a pass-through
+  *   for inputB/carryIn)
   *
   *
   *   routed inputs:    64   (inputs)
@@ -89,13 +92,15 @@ class AdderBlock extends Module {
   val io = new Bundle {
     val input       = Bits(INPUT,    64)
     val routing     = Bits(INPUT,  1100)
-    val programming = Bits(INPUT,   990)
+    val programming = Bits(INPUT,   992)
     val registerAll = Bits(INPUT,     1) // this is used when we are programming the FPGA. We register on all flipflops
     val outputs     = Bits(OUTPUT,   32)
   }
   io.outputs := UInt(0) // weird CHISEL req
 
   val adder   = Module(new WrapperAdder)
+  adder.io.enableAdder := io.routing(990)
+  adder.io.enableReg   := io.routing(991)
 
   val logicBlocks = new ArrayBuffer[LogicBlock]()
 
@@ -129,16 +134,16 @@ class AdderBlock extends Module {
   // adder input B is driven by logic blocks 24-31, the next highest-order logic cells whose output is not already
   // going to be connected to the global outputs.
   adder.io.inputB := UInt(0) // weird CHISEL req
-  for (i <- 24 to 31) {
-    adder.io.inputB(i - 24) := logicBlocks(i).io.result
+  for (i <- 23 to 30) {
+    adder.io.inputB(i - 23) := logicBlocks(i).io.result
   }
   adder.io.inputA := UInt(0) // weird CHISEL req
   // the adder input A is connected to the next set of logic cell outputs.
-  for (i <- 16 to 23) {
-    adder.io.inputA(i - 16) := logicBlocks(i).io.result
+  for (i <- 15 to 22) {
+    adder.io.inputA(i - 15) := logicBlocks(i).io.result
   }
   // the carry-in is driven by logic block 15
-  adder.io.carryIn := logicBlocks(15).io.result
+  adder.io.carryIn := logicBlocks(31).io.result
 
   // the first three LogicBlocks will go to the lower-order routing table inputs.
   routingTable.io.input(18)  := logicBlocks(52).io.result
@@ -173,10 +178,10 @@ class AdderBlock extends Module {
 }
 
 class AdderBlockTests(c: AdderBlock) extends Tester(c) {
-  // ==== first test, pass-through values except on adder carry-out ====
+  // ==== first test, pass-through values except on adder carry-out. Adder is enabled ====
   val programming = new ModifyableBigInt()
 
-  for (i <- 16 to 23) { // these are the logic cells connected to adder, and which have their LSB connected
+  for (i <- 15 to 22) { // these are the logic cells connected to adder, and which have their LSB connected
                         // to the input which they want to duplicate. These go to adder.io.inputA
     programming.setBits(i * 18 + 17, i * 18 + 0, 0x0AAAA) // pass-through on the lowest order. other bits are ignored
   }
@@ -195,9 +200,8 @@ class AdderBlockTests(c: AdderBlock) extends Tester(c) {
   // an easy way to do this is to simply take ech of the first two routing domains and route input 1 to output 1,
   // input 2 to output 2, etc.
 
-  for (i <- 16 to 23) { // adder input A. LUTs 16 to 23
-    routing.setBits(5 * i + 4, 5 * i, i - 16) // route LSB for luts that go to the adder's input A
-    println("routing table input: " + i + " to input number: " + (i-16))
+  for (i <- 15 to 22) { // adder input A. LUTs 15 to 22, duplicating inputs 0 to 7
+    routing.setBits(5 * i + 4, 5 * i, i - 15) // route LSB for luts that go to the adder's input A
   }
 
   var j = 9
@@ -211,6 +215,9 @@ class AdderBlockTests(c: AdderBlock) extends Tester(c) {
     val offset = 39 * 5 // logic cells 39-54
     routing.setBits(5 * i + 4 + secondFromLsb + offset, 5 * i + secondFromLsb + offset, i)
   }
+
+  // finally, enable the adder
+  routing.setBits(990,990,1)
 
   println("routing value is: " + routing)
 
