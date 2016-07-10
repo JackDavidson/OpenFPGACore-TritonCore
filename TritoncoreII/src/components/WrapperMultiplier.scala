@@ -11,13 +11,25 @@ class WrapperMultiplier extends Module {
   val io = new Bundle {
     val inputA      = Bits(INPUT,  8 ) // the first input number, unsigned
     val inputB      = Bits(INPUT,  8 ) // the second input number, unsigned
+    val enableMult  = Bits(INPUT,  1 )
+    val enableReg   = Bits(INPUT,  1 )
     val result      = Bits(OUTPUT, 16) // the multiplication result. unsigned
   }
-  io.result := io.inputA * io.inputB
+  val optionalReg = Reg(init = UInt(0, width = 16))
+  val multResult = io.inputA * io.inputB
+
+  val concatenated = UInt(width = 16)
+  concatenated := Cat(io.inputA, io.inputB)
+  val result = UInt(width = 16)
+  result := Mux(io.enableMult(0), multResult, concatenated)
+  optionalReg := result
+
+  io.result := Mux(io.enableReg(0), optionalReg, result)
 }
 
 class WrapperMultiplierTests(c:WrapperMultiplier) extends Tester(c) {
   poke(c.io.inputA, 0xAA)
+  poke(c.io.enableMult, 1)
 
   var valuesWithResults = Array(Array(0xAA, 0x70E4), Array(0x6F, 0x49B6))
 

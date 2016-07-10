@@ -100,7 +100,7 @@ class AdderBlock extends Module {
 
   val adder   = Module(new WrapperAdder)
   adder.io.enableAdder := io.routing(990)
-  adder.io.enableReg   := io.routing(991)
+  adder.io.enableReg   := io.routing(991) | io.registerAll
 
   val logicBlocks = new ArrayBuffer[LogicBlock]()
 
