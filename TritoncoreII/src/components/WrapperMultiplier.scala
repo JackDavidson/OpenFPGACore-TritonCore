@@ -19,7 +19,7 @@ class WrapperMultiplier extends Module {
   val multResult = io.inputA * io.inputB
 
   val concatenated = UInt(width = 16)
-  concatenated := Cat(io.inputA, io.inputB)
+  concatenated := Cat(io.inputB, io.inputA)
   val result = UInt(width = 16)
   result := Mux(io.enableMult(0), multResult, concatenated)
   optionalReg := result

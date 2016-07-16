@@ -99,8 +99,8 @@ class AdderBlock extends Module {
   io.outputs := UInt(0) // weird CHISEL req
 
   val adder   = Module(new WrapperAdder)
-  adder.io.enableAdder := io.routing(990)
-  adder.io.enableReg   := io.routing(991) | io.registerAll
+  adder.io.enableAdder := io.programming(990)
+  adder.io.enableReg   := io.programming(991) | io.registerAll
 
   val logicBlocks = new ArrayBuffer[LogicBlock]()
 
@@ -217,7 +217,7 @@ class AdderBlockTests(c: AdderBlock) extends Tester(c) {
   }
 
   // finally, enable the adder
-  routing.setBits(990,990,1)
+  programming.setBits(990,990,1)
 
   println("routing value is: " + routing)
 
