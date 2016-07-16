@@ -2,8 +2,10 @@ import java.math.BigInteger
 
 import Chisel._
 
-class RoutingTable(inputCount : Int = 128, outputCount : Int = 220) extends Module {
-  val numberOfRoutingBits = outputCount * (scala.math.log(inputCount/4)/scala.math.log(2)).toInt
+class RoutingTable(inputCount : Int = 128, outputCount : Int = 220, groupings : Int = 4) extends Module {
+  val routingBitsPerOutput = (scala.math.log(inputCount/groupings)/scala.math.log(2)).toInt
+  val numberOfRoutingBits = outputCount * routingBitsPerOutput
+  val inputGroupingSize = inputCount / groupings
   val io = new Bundle {
     val input      = Bits(INPUT,  inputCount)
     val routing    = Bits(INPUT,  numberOfRoutingBits)
@@ -13,12 +15,12 @@ class RoutingTable(inputCount : Int = 128, outputCount : Int = 220) extends Modu
   io.outputs := UInt(0) // weird CHISEL req
 
 
-  val groupingSize = outputCount / 4
-  for (i <- 0 to 3) {    // low, med-low, med-high, high order bits
+  val groupingSize = outputCount / groupings
+  for (i <- 0 to (groupings-1)) {    // low, med-low, med-high, high order bits
     for (j <- 0 to (groupingSize - 1)) { // one for each LogicBlock on all orders
-    val lut = Module(new LUT(inCount = 5,outCount = 1))
-      lut.io.lut               := io.input((i + 1) * 32 - 1, i * 32) // take the high, med, or etc order bits
-      lut.io.sel               := io.routing((i * groupingSize + j + 1) * 5 - 1, (i * groupingSize + j) * 5)
+    val lut = Module(new LUT(inCount = routingBitsPerOutput,outCount = 1))
+      lut.io.lut       := io.input((i + 1) * inputGroupingSize - 1, i * 32) // take the high, med, or etc order bits
+      lut.io.sel       := io.routing((i * groupingSize + j + 1) * routingBitsPerOutput - 1, (i * groupingSize + j) * 5)
       io.outputs((i*groupingSize) + j)   := lut.io.res(0) // take logic block # j, and attach input i to it.
     }
   }
