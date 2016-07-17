@@ -19,8 +19,8 @@ class RoutingTable(inputCount : Int = 128, outputCount : Int = 220, groupings : 
   for (i <- 0 to (groupings-1)) {    // low, med-low, med-high, high order bits
     for (j <- 0 to (groupingSize - 1)) { // one for each LogicBlock on all orders
     val lut = Module(new LUT(inCount = routingBitsPerOutput,outCount = 1))
-      lut.io.lut       := io.input((i + 1) * inputGroupingSize - 1, i * 32) // take the high, med, or etc order bits
-      lut.io.sel       := io.routing((i * groupingSize + j + 1) * routingBitsPerOutput - 1, (i * groupingSize + j) * 5)
+      lut.io.lut       := io.input((i + 1) * inputGroupingSize - 1, i * inputGroupingSize) // take the high, med, or etc order bits
+      lut.io.sel       := io.routing((i * groupingSize + j + 1) * routingBitsPerOutput - 1, (i * groupingSize + j) * routingBitsPerOutput)
       io.outputs((i*groupingSize) + j)   := lut.io.res(0) // take logic block # j, and attach input i to it.
     }
   }
