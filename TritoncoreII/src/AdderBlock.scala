@@ -94,6 +94,7 @@ class AdderBlock extends Module {
     val routing     = Bits(INPUT,  1100)
     val programming = Bits(INPUT,   992)
     val registerAll = Bits(INPUT,     1) // this is used when we are programming the FPGA. We register on all flipflops
+    val reset       = Bits(INPUT,     1)
     val outputs     = Bits(OUTPUT,   32)
   }
   io.outputs := UInt(0) // weird CHISEL req
@@ -101,12 +102,14 @@ class AdderBlock extends Module {
   val adder   = Module(new WrapperAdder)
   adder.io.enableAdder := io.programming(990)
   adder.io.enableReg   := io.programming(991) | io.registerAll
+  adder.io.reset       := io.reset
 
   val logicBlocks = new ArrayBuffer[LogicBlock]()
 
   for (i <- 0 to 54) {
     val logicBlock = Module(new LogicBlock())
     logicBlocks += logicBlock
+    logicBlock.io.reset := io.reset
     logicBlock.io.programmedInputs := io.programming(i*18 + 15,i*18)
     // we need to turn on the flipflop while programming, so flipflop is enabled upon registerAll
     logicBlock.io.enableFlipflop   := io.programming(i*18 + 16) | io.registerAll

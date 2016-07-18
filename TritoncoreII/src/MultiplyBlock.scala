@@ -74,6 +74,7 @@ class MultiplyBlock extends Module {
     val routing     = Bits(INPUT,   960)
     val programming = Bits(INPUT,   866)
     val registerAll = Bits(INPUT,     1) // this is used when we are programming the FPGA. We register on all flipflops
+    val reset       = Bits(INPUT,     1)
     val outputs     = Bits(OUTPUT,   32)
   }
   io.outputs := UInt(0) // weird CHISEL req
@@ -81,12 +82,14 @@ class MultiplyBlock extends Module {
   val mult   = Module(new WrapperMultiplier) // create the multiplication unit we will use
   mult.io.enableMult  := io.routing(864)     // enable/pass-through on the multiply unit
   mult.io.enableReg   := io.routing(865) | io.registerAll // enable the reg when we are programming, or if its turned on
+  mult.io.reset := io.reset
 
   val logicBlocks = new ArrayBuffer[LogicBlock]()
 
   for (i <- 0 to 47) { // create all 47 logic blocks
     val logicBlock = Module(new LogicBlock())
     logicBlocks += logicBlock
+    logicBlock.io.reset := io.reset
     logicBlock.io.programmedInputs := io.programming(i*18 + 15,i*18) // connect them to the LSBs of programming
     // we need to turn on the flipflop while programming, so flipflop is enabled upon registerAll
     logicBlock.io.enableFlipflop   := io.programming(i*18 + 16) | io.registerAll
