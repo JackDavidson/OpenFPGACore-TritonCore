@@ -10,5 +10,14 @@ class ModifyableBigInt() {
       }
     }
   }
+  def get32(index: Int): Int = {
+    var result = 0
+    for (i <- 0 to 31) {
+      if (value.testBit(index*32 + i)) {
+        result |= 1 << i
+      }
+    }
+    return result
+  }
   override def toString() = value.toString(16)
 }

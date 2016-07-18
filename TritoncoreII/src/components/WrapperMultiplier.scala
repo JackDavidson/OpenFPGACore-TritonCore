@@ -13,6 +13,7 @@ class WrapperMultiplier extends Module {
     val inputB      = Bits(INPUT,  8 ) // the second input number, unsigned
     val enableMult  = Bits(INPUT,  1 )
     val enableReg   = Bits(INPUT,  1 )
+    val reset       = Bits(INPUT,  1 )
     val result      = Bits(OUTPUT, 16) // the multiplication result. unsigned
   }
   val optionalReg = Reg(init = UInt(0, width = 16))
@@ -21,7 +22,11 @@ class WrapperMultiplier extends Module {
   val concatenated = UInt(width = 16)
   concatenated := Cat(io.inputB, io.inputA)
   val result = UInt(width = 16)
-  result := Mux(io.enableMult(0), multResult, concatenated)
+  when (io.reset(0)) {
+    result := UInt(0)
+  }.otherwise {
+    result := Mux(io.enableMult(0), multResult, concatenated)
+  }
   optionalReg := result
 
   io.result := Mux(io.enableReg(0), optionalReg, result)
