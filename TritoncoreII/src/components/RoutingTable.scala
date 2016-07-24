@@ -60,6 +60,8 @@ object RoutingTableTestRunner {
   }
 }
 
+
+// routingtableB groups on outputs rather than inputs.
 class RoutingTableB(inputCount : Int = 128, outputCount : Int = 220, groupings : Int = 4) extends Module {
   val routingBitsPerOutput = (scala.math.log(inputCount/groupings)/scala.math.log(2)).toInt
   val numberOfRoutingBits = outputCount * routingBitsPerOutput

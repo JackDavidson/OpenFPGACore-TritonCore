@@ -16,7 +16,7 @@ class TritoncoreII extends Module {
     val reset       = Bits(INPUT,     1) // resets all flipflops on LocgicBlock ouptputs
     val outputs     = Bits(OUTPUT,   32)
   }
-  io.outputs := UInt(0) // weird CHISEL req
+  //io.outputs := UInt(0) // weird CHISEL req
 
   val programming = new ArrayBuffer[UInt]()
   val programmingInOne = new UInt()
@@ -77,29 +77,32 @@ class TritoncoreII extends Module {
   // 32 global inputs, plus 7*32 outputs from sub-blocks = 256 inputs. there are 64*7+32=480 outputs from the tale.
   // each input needs to select from one of 8 values, so 256/4=32 groupings.
   // that gives us 3 bits for routing each output, and 480 outputs = 1440 routing bits
-  val routingTable = Module(new RoutingTableB(256, 480, 32))
+  // 15 output groupings since we have 480 outputs, in 32 groups. 280/15 = 15
+  val routingTable = Module(new RoutingTableB(256, 480, 15))
   routingTable.io.routing := programmingInOne(totalRoutingBitsUsed + 1440 - 1, totalRoutingBitsUsed)
 
   // now that we have finished setting up the programming, its time to connect the inputs of the routing table
   val inputsPerBlock = 32
   routingTable.io.input := UInt(0) // weird CHISEL req
 
+  val routeInputsForGlobalInputs = 32
+  routingTable.io.input(routeInputsForGlobalInputs - 1, 0) := io.input
+
   for ((addBlock, i) <- addBlocks.zipWithIndex) {
-    routingTable.io.input((i+1)*inputsPerBlock-1,i*inputsPerBlock) := addBlock.io.outputs
+    val offset = routeInputsForGlobalInputs
+    routingTable.io.input((i+1)*inputsPerBlock-1 + offset,i*inputsPerBlock + offset) := addBlock.io.outputs
   }
 
-  val routeInputsUsedSoFar = addBlocks.length * inputsPerBlock
+  val routeInputsUsedSoFar = addBlocks.length * inputsPerBlock + routeInputsForGlobalInputs
 
   for ((multBlock, i) <- multBlocks.zipWithIndex) {
     val offset = routeInputsUsedSoFar
     routingTable.io.input((i+1)*inputsPerBlock-1 + offset, i*inputsPerBlock + offset) := multBlock.io.outputs
   }
-  val routeInputsUsedSoFar2 = routeInputsUsedSoFar + multBlocks.length * inputsPerBlock
-  routingTable.io.input(routeInputsUsedSoFar2 + inputsPerBlock - 1, routeInputsUsedSoFar2) := io.input
 
 
   // now we are done connectig the inputs of the routing table. time to connect the outputs of the routing table.
-  val outputsPerBlock = 32
+  val outputsPerBlock = 64 // number of outputs from the routing table per 'block'
 
   for ((addBlock, i) <- addBlocks.zipWithIndex) {
     addBlock.io.input := routingTable.io.outputs((i+1)*outputsPerBlock-1,i*outputsPerBlock)
@@ -111,8 +114,10 @@ class TritoncoreII extends Module {
     val offset = routeOutputsUsedSoFar
     multBlock.io.input := routingTable.io.outputs((i+1)*outputsPerBlock-1 + offset, i*outputsPerBlock + offset)
   }
-  val routeOutputsUsedSoFar2 = routeInputsUsedSoFar + multBlocks.length * inputsPerBlock
-  io.outputs := routingTable.io.outputs(routeOutputsUsedSoFar2 + outputsPerBlock - 1, routeOutputsUsedSoFar2)
+  val routeOutputsUsedSoFar2 = routeOutputsUsedSoFar + multBlocks.length * outputsPerBlock
+  //println("from: " + (routeOutputsUsedSoFar2 + 32 - 1) + " to: " + routeOutputsUsedSoFar2)
+  //println("mults: " + multBlocks.length + " adds: " + addBlocks.length)
+  io.outputs := routingTable.io.outputs(routeOutputsUsedSoFar2 + 32 - 1, routeOutputsUsedSoFar2)
 
   // now that everything is connected and all the programming is set up, we're done.
 }
@@ -226,7 +231,7 @@ class TritoncoreIITests(c: TritoncoreII) extends Tester(c) {
 
 object TritoncoreIITestRunner {
   def main(args: Array[String]): Unit = {
-    chiselMainTest(Array[String]("--backend", "c", /*"--compile",*/ "--test", /*"--genHarness",*/ "--noCombLoop"),
+    chiselMainTest(Array[String]("--backend", "c", "--compile", "--test", "--genHarness", "--noCombLoop"),
       () => Module(new TritoncoreII()))
     {
       c => new TritoncoreIITests(c)
