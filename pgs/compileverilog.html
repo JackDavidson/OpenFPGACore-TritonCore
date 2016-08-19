@@ -55,11 +55,11 @@
         <p>you can also use Modelsim to run the testbench, as well. However, modelsim free edition ran at about 1/4th the speed for me, taking 4 hours to complete the test bench.</p>
         <p>Run the testbench in vivado:</p>
         <br/>
-        <p>$ /opt/Xilinix/Vivado/....../bin/vivado</p>
+        <pre>$ /opt/Xilinix/Vivado/....../bin/vivado</pre>
         <p>Create a new project, and select TritoncoreI/verilog as the location. Import all verilog files, and add and.bits as a simulation source.</p>
         <p>Make sure you include and.bits as a simulation source!!!</p>
         <p>Set test_core as the top-level module if necessary. At the bottom of your screen, you will see a tcl console. type <p>
-        <p>> run all</p>
+        <pre>> run all</pre>
         <p>into the console to start the simulation.</p>
         <p>You're done! You now have the entire toolchain running. Give yourself a pat on the back.</p>
         <p>On the next pages, there is a tutorial on how the final Verilog for the FPGA core was actually generated. If you plan to help develp the on the Tritoncore project, you will need this information. (STILL TODO!!)</p>

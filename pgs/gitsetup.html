@@ -47,15 +47,15 @@
         <h1>Git Setup</h1>
         <br/>
         <p>On ubuntu, hit ctrl+alt+t to open terminal. Type:</p>
-        <p>$ sudo apt-get install git</p>
+        <pre>$ sudo apt-get install git</pre>
         <p>Don't include the dollar sign. That is to show that you are entering this as a normal user, not root.
 after entering your pasword, git will install.</p>
         <br/>
         <p>Next, we will download the tritoncore. copy and paste the following lines into terminal:</p>
-        <p>$ cd ~/Desktop</p>
-        <p>$ git clone https://github.com/JackDavidson/OpenFPGACore-TritonCore.git</p>
-        <p>$ cd ./OpenFPGACore-TritonCore/TritonCoreI/src</p>
-        <p>$ sbt run</p>
+        <pre>$ cd ~/Desktop
+$ git clone https://github.com/JackDavidson/OpenFPGACore-TritonCore.git
+$ cd ./OpenFPGACore-TritonCore/TritonCoreI/src
+$ sbt run</pre>
         <br/>
         <p>Press the number corresponding to LUTTestRunner or ShiftRegisterTestRunner to build and run a C++ emulator
 for the component. Other numbers correspond to other unit tests and verilog code export. We only need to know if a

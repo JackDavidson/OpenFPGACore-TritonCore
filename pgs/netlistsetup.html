@@ -48,23 +48,23 @@
         <br/>
         <p>On ubuntu, hit ctrl+alt+t to open terminal. Type:</p>
         <br/>
-        <p>$ cd ~/Desktop</p>
-        <p>$ git clone https://github.com/hungrymonkey/yosys-1.git</p>
-        <p>$ cd ./yosys-1/</p>
+<pre>$ cd ~/Desktop
+$ git clone https://github.com/hungrymonkey/yosys-1.git
+$ cd ./yosys-1/</pre>
         <br/>
         <p>To download the dependencies we need, type:</p>
-        <p>$ yosys_deps="build-essential clang bison flex libreadline-dev gawk tcl-dev libffi-dev git mercurial graphviz xdot pkg-config python3"</p>
-        <p>$ sudo apt-get install $yosys_deps</p>
+        <pre>$ yosys_deps="build-essential clang bison flex libreadline-dev gawk tcl-dev libffi-dev git mercurial graphviz xdot pkg-config python3"
+$ sudo apt-get install $yosys_deps</pre>
         <br/>
         <p>To build, type:</p>
-        <p>$ make config-gcc</p>
-        <p>$ make</p>
-        <p>$ sudo make install</p>
+        <pre>$ make config-gcc
+$ make
+$ sudo make install</pre>
         <br/>
         <p>To create a netlist for the Tritoncore-I:</p>
         <p>there is an example verilog file in the top level of the docs. "and.v"</p>
         <p>copy this file into the directory where we build yosys, then type:</p>
-        <p>$ yosys -p "synth_tritoncore -blif and.blif" and.v</p>
+        <pre>$ yosys -p "synth_tritoncore -blif and.blif" and.v</pre>
         <br/>
         <p>You're done with yosys! Next is to take the netlist (and.bliff) and generate the bitstream</p>
         <br/>
