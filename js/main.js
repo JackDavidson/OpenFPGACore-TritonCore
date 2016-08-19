@@ -1,8 +1,6 @@
 
 
 $(document).ready(function() {
-  $('body').css('display', 'none');
-  $('body').fadeIn(1000);
   $('#more-btn').click(function() {
     if(window.location.href.indexOf("index.html") > -1)
       newLocation = 'pgs/overview.html';
@@ -26,7 +24,6 @@ $(document).ready(function() {
       newLocation = 'bitstreamsetup.html';
     else if(window.location.href.indexOf("bitstreamsetup.html") > -1)
       newLocation = 'compileverilog.html';
-    $('body').fadeOut(1000, newpage);
   });
 });
 
