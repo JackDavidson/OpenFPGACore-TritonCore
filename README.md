@@ -1,5 +1,6 @@
 Visit our [homepage!](jackdavidson.github.io/OpenFPGACore-TritonCore)
 
+
 OpenFPGACore (TritonCore I)
 
 This is a very simple and minimal FPGA that is implemented in CHISEL.
