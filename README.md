@@ -1,4 +1,4 @@
-Visit our [homepage!](jackdavidson.github.io/OpenFPGACore-TritonCore)
+Visit our [homepage!](http://jackdavidson.github.io/OpenFPGACore-TritonCore)
 
 
 OpenFPGACore (TritonCore I)
