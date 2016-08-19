@@ -1,9 +1,0 @@
-The documentation for Tritoncore-I is located in docs. 
-
-There is an entire tutorial on setting up the tools, compiling verilog for the 
-TritoncoreI, running unit tests, etc. There is also an in-depth description
-of each component of Tritoncore-I. There is also a tutorial on compiling and
-running the C++ emulator for the Tritoncore-I.
-
-src contains all the source code and the sbt build file. Tritoncore-I is 
-implemented entirely in CHISEL, so there is no verilog under the src directory.
